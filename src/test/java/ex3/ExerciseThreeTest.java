@@ -4,6 +4,7 @@ import com.shaazabedin.db.CustomerMapperRepository;
 import com.shaazabedin.model.Customer;
 import com.shaazabedin.service.CustomerMappingService;
 import com.shaazabedin.service.CustomerMappingServiceImpl;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,5 +66,11 @@ public class ExerciseThreeTest {
         Mockito.when(this.customerMapperRepository.findById("CustomerId")).thenReturn(optionalCustomer);
 
         customerMappingService.getExternalId("CustomerId");
+    }
+
+    @Test
+    public void shouldReturnNullIfIdDoesNotExist() {
+        String externalId = customerMappingService.getExternalId("CustomerId");
+        Assertions.assertThat(externalId).isNull();
     }
 }

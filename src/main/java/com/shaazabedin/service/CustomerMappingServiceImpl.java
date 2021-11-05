@@ -23,7 +23,13 @@ public class CustomerMappingServiceImpl implements CustomerMappingService {
     @Override
     public String getExternalId(String customerId) {
         Optional<Customer> customerToFind = customerMapperRepository.findById(customerId);
-        return customerToFind.get().getExternalId();
+        if (customerToFind.isPresent()) {
+            log.info("Found Customer: {}", customerToFind);
+            return customerToFind.get().getExternalId();
+        } else {
+            log.warn("No Customer with CustomerId: {}", customerId);
+            return null;
+        }
     }
 
     private Customer generateCustomer(String customerId, Date createdAt) {
