@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -21,7 +22,8 @@ public class CustomerMappingServiceImpl implements CustomerMappingService {
 
     @Override
     public String getExternalId(String customerId) {
-        return null;
+        Optional<Customer> customerToFind = customerMapperRepository.findById(customerId);
+        return customerToFind.get().getExternalId();
     }
 
     private Customer generateCustomer(String customerId, Date createdAt) {

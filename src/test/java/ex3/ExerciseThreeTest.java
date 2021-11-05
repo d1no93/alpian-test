@@ -8,10 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.sql.Date;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -47,5 +50,20 @@ public class ExerciseThreeTest {
                 .format(Instant.now().plus(Period.ofDays(1)));
 
         customerMappingService.createCustomer("CustomerId", tomorrowDate);
+    }
+
+    @Test
+    public void shouldRetrieveExternalId() {
+
+        Customer customer = new Customer();
+        customer.setExternalId("ExternalId");
+        customer.setCustomerId("CustomerId");
+        customer.setCreatedAt(new Date(Date.from(Instant.now()).getTime()));
+
+        Optional<Customer> optionalCustomer = Optional.of(customer);
+
+        Mockito.when(this.customerMapperRepository.findById("CustomerId")).thenReturn(optionalCustomer);
+
+        customerMappingService.getExternalId("CustomerId");
     }
 }
