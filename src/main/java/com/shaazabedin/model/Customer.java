@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Date;
 
 @Data
 @EqualsAndHashCode
@@ -24,5 +25,5 @@ public class Customer {
     private String externalId;
 
     @Column
-    private String createdAt;
+    private Date createdAt;
 }

@@ -6,5 +6,5 @@ public interface CustomerMappingService {
 
     String getExternalId(String customerId);
 
-    Customer createCustomer(String customerId);
+    Customer createCustomer(String customerId, String createdAt);
 }
