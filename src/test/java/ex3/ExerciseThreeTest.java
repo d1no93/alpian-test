@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,5 +37,15 @@ public class ExerciseThreeTest {
     @Test(expected=IllegalArgumentException.class)
     public void shouldValidateDateFormat() {
         customerMappingService.createCustomer("CustomerId", "20210501");
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldValidateDateIsNotTheFuture() {
+
+        String tomorrowDate = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                .withZone(ZoneId.from(ZoneOffset.UTC))
+                .format(Instant.now().plus(Period.ofDays(1)));
+
+        customerMappingService.createCustomer("CustomerId", tomorrowDate);
     }
 }
