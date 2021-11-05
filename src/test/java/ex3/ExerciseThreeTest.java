@@ -26,8 +26,13 @@ public class ExerciseThreeTest {
     }
 
     @Test
-    public void shouldSaveCustomer() {
+    public void shouldCreateCustomer() {
         Customer createdCustomer = customerMappingService.createCustomer("CustomerId", "2021-05-01");
         verify(customerMapperRepository, only()).save(createdCustomer);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldValidateDateFormat() {
+        customerMappingService.createCustomer("CustomerId", "20210501");
     }
 }

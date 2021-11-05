@@ -33,8 +33,16 @@ public class CustomerMappingServiceImpl implements CustomerMappingService {
         return customer;
     }
 
+    private Date validateDateFormat(String createdAt) {
+        if (!createdAt.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new IllegalArgumentException(String.format("Date: %s must be in yyyy-MM-dd format.", createdAt));
+        }
+        return Date.valueOf(createdAt);
+    }
+
     @Override
     public Customer createCustomer(String customerId, String createdAt) {
+        validateDateFormat(createdAt);
         Customer customer = this.generateCustomer(customerId, createdAt);
         log.info("Begin - Save Customer: {}", customer);
         this.customerMapperRepository.save(customer);
