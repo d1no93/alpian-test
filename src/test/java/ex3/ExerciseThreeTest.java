@@ -1,6 +1,7 @@
 package ex3;
 
 import com.shaazabedin.db.CustomerMapperRepository;
+import com.shaazabedin.exception.CustomerAlreadyExistsException;
 import com.shaazabedin.model.Customer;
 import com.shaazabedin.service.CustomerMappingService;
 import com.shaazabedin.service.CustomerMappingServiceImpl;
@@ -35,7 +36,9 @@ public class ExerciseThreeTest {
     @Test
     public void shouldCreateCustomer() {
         Customer createdCustomer = customerMappingService.createCustomer("CustomerId", "2021-05-01");
-        verify(customerMapperRepository, only()).save(createdCustomer);
+        verify(customerMapperRepository).findById("CustomerId");
+        verify(customerMapperRepository).save(createdCustomer);
+        verifyNoMoreInteractions(customerMapperRepository);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -72,5 +75,24 @@ public class ExerciseThreeTest {
     public void shouldReturnNullIfIdDoesNotExist() {
         String externalId = customerMappingService.getExternalId("CustomerId");
         Assertions.assertThat(externalId).isNull();
+    }
+
+    @Test(expected=CustomerAlreadyExistsException.class)
+    public void shouldThrowExceptionIfCustomerAlreadyExists() {
+
+        Customer customer = new Customer();
+        customer.setExternalId("ExternalId");
+        customer.setCustomerId("CustomerId");
+        customer.setCreatedAt(new Date(Date.from(Instant.now()).getTime()));
+
+        Optional<Customer> optionalCustomer = Optional.of(customer);
+
+        Mockito.when(this.customerMapperRepository.findById("CustomerId")).thenReturn(optionalCustomer);
+
+        String todayDate = DateTimeFormatter.ISO_LOCAL_DATE
+                .withZone(ZoneId.from(ZoneOffset.UTC))
+                .format(Instant.now());
+
+       customerMappingService.createCustomer("CustomerId", todayDate);
     }
 }

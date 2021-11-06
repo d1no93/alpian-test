@@ -1,6 +1,7 @@
 package com.shaazabedin.service;
 
 import com.shaazabedin.db.CustomerMapperRepository;
+import com.shaazabedin.exception.CustomerAlreadyExistsException;
 import com.shaazabedin.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,11 @@ public class CustomerMappingServiceImpl implements CustomerMappingService {
     @Override
     public Customer createCustomer(String customerId, String createdAt) {
         Date createdAtDate = validateDateFormat(createdAt);
+
+        if (this.getExternalId(customerId) != null) {
+            throw new CustomerAlreadyExistsException(customerId);
+        }
+
         Customer customer = this.generateCustomer(customerId, createdAtDate);
         log.info("Begin - Save Customer: {}", customer);
         this.customerMapperRepository.save(customer);
