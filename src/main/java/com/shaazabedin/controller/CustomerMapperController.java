@@ -1,6 +1,5 @@
 package com.shaazabedin.controller;
 
-import com.shaazabedin.model.Customer;
 import com.shaazabedin.service.CustomerMappingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,8 +30,7 @@ public class CustomerMapperController {
         } catch (Exception e) {
             log.error("Exception: {}, CustomerId: {}, CreatedAt: {}", e.getMessage(), customerId, createdAt);
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(String.format("Customer: %s already exists.", customerId));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
