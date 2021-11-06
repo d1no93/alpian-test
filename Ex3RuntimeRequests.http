@@ -1,0 +1,20 @@
+### Happy Path 'createCustomer' request
+POST http://localhost:8080/customerMapper/customer/CustomerId/createdAt/2021-11-06/create
+
+### Happy Path 'getExternalId' request
+GET http://localhost:8080/customerMapper/customer/CustomerId/externalId
+
+### Attempt the identical 'createCustomer' request should now fail
+POST http://localhost:8080/customerMapper/customer/CustomerId/createdAt/2021-11-06/create
+
+### Changing the date won't change anything
+POST http://localhost:8080/customerMapper/customer/CustomerId/createdAt/2021-11-05/create
+
+### Malformed date means this request should be rejected
+POST http://localhost:8080/customerMapper/customer/AnotherCustomerId/createdAt/20211105/create
+
+### Date in the future should be rejected too
+POST http://localhost:8080/customerMapper/customer/AnotherCustomerId/createdAt/2022-11-06/create
+
+### This should fail as the 'getExternalId' the previous request shouldn't have been saved.
+GET http://localhost:8080/customerMapper/customer/AnotherCustomerId/externalId
