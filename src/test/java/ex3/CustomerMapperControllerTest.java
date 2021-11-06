@@ -62,4 +62,13 @@ public class CustomerMapperControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("ExternalId"));
     }
+
+    @Test
+    public void shouldReturnNoContentIfCustomerIdNotCreated() throws Exception {
+        when(customerMappingService.getExternalId("CustomerId")).thenReturn(null);
+
+        this.mockMvc.perform(get("/customerMapper/customer/CustomerId/externalId"))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
 }

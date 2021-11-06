@@ -40,6 +40,12 @@ public class CustomerMapperController {
     @ResponseBody
     public ResponseEntity<String> getExternalId(@PathVariable(value = "customerId") String customerId) {
         String externalId = this.customerMappingService.getExternalId(customerId);
+
+        if (externalId == null) {
+            log.warn(String.format("CustomerId: %s doesn't exist. No ExternalId returned", customerId));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(externalId);
     }
 }
