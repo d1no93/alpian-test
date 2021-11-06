@@ -2,6 +2,7 @@ package ex3;
 
 import com.shaazabedin.Application;
 import com.shaazabedin.controller.CustomerMapperController;
+import com.shaazabedin.exception.CustomerAlreadyExistsException;
 import com.shaazabedin.model.Customer;
 import com.shaazabedin.service.CustomerMappingService;
 import org.junit.Test;
@@ -40,5 +41,15 @@ public class CustomerMapperControllerTest {
         this.mockMvc.perform(post("/customerMapper/customer/CustomerId/createdAt/2021-11-06/create"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Created Customer - Customer: CustomerId, CreatedAt: 2021-11-06"));
+    }
+
+    @Test
+    public void shouldReturnBadRequestIfCustomerAlreadyExists() throws Exception {
+        when(customerMappingService.createCustomer("CustomerId", "2021-11-06"))
+                .thenThrow(new CustomerAlreadyExistsException("CustomerId"));
+
+        this.mockMvc.perform(post("/customerMapper/customer/CustomerId/createdAt/2021-11-06/create"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(String.format("Customer: CustomerId already exists.")));
     }
 }
