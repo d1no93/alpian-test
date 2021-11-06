@@ -35,4 +35,11 @@ public class CustomerMapperController {
                     .body(String.format("Customer: %s already exists.", customerId));
         }
     }
+
+    @GetMapping(value = "/customer/{customerId}/externalId")
+    @ResponseBody
+    public ResponseEntity<String> getExternalId(@PathVariable(value = "customerId") String customerId) {
+        String externalId = this.customerMappingService.getExternalId(customerId);
+        return ResponseEntity.status(HttpStatus.OK).body(externalId);
+    }
 }

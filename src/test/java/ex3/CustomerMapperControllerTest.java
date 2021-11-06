@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,7 +34,7 @@ public class CustomerMapperControllerTest {
     private CustomerMappingService customerMappingService;
 
     @Test
-    public void shouldSuccessfullyCreatedCustomer() throws Exception {
+    public void shouldReturnCreatedCustomer() throws Exception {
         Customer customerMock = Mockito.mock(Customer.class);
         when(customerMappingService.createCustomer("CustomerId", "2021-11-06"))
                 .thenReturn(customerMock);
@@ -51,5 +52,14 @@ public class CustomerMapperControllerTest {
         this.mockMvc.perform(post("/customerMapper/customer/CustomerId/createdAt/2021-11-06/create"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(String.format("Customer: CustomerId already exists.")));
+    }
+
+    @Test
+    public void shouldReturnExternalId() throws Exception {
+        when(customerMappingService.getExternalId("CustomerId")).thenReturn("ExternalId");
+
+        this.mockMvc.perform(get("/customerMapper/customer/CustomerId/externalId"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("ExternalId"));
     }
 }
